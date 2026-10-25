@@ -1,0 +1,44 @@
+--- previous/code.py
++++ 07_bounded_replay/code.py
+@@ -1,6 +1,6 @@
+-"""MiniInfer stage 6: async_lifetime.
++"""MiniInfer stage 7: bounded_replay.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/06_async_lifetime/code.py
++Run: python lessons/07_bounded_replay/code.py
+ """
+ from __future__ import annotations
+ import json
+@@ -85,6 +85,23 @@
+     return {'query_lengths':lengths, 'total_q':best[2], 'graph_size':best[3], 'synthetic_score':round(best[0],4)}
+ 
+ 
++"""One-dimensional SWA visibility toy. Not complete YoCo/CP/cache equivalence."""
++def visible(pos, data_len, window, keep, backtrack=0, valid_start=0):
++    if window < 1 or backtrack < 0 or keep < window + backtrack:
++        raise ValueError('keep must cover window + backtracking')
++    if not 0 <= pos < data_len or valid_start < 0:
++        raise ValueError('invalid absolute position')
++    lo = min(pos+1, max(0, pos-window+1, data_len-keep, valid_start))
++    return tuple(range(lo, pos+1))
++
++
++def compare(length=12, window=4, keep=6, backtrack=2):
++    full = {p: visible(p,length,window,keep,backtrack) for p in range(length)}
++    compact = {p: visible(p,length,window,keep,backtrack) for p in range(max(0,length-keep),length)}
++    assert all(full[p] == keys for p,keys in compact.items())
++    return compact
++
++
+ @dataclass
+ class Request:
+     request_id: str
+@@ -136,6 +153,8 @@
+             request.computed += take
+             budget -= take
+             self.trace.append(('prefill', request.request_id, take))
++            keys = visible(request.computed-1, request.prompt_length, 4, 6, 2)
++            self.trace.append(('swa-visible', request.request_id, keys))
+             if request.computed == request.prompt_length:
+                 self.running.append(self.waiting.pop(0))
+ 

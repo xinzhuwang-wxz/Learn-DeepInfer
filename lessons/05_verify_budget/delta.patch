@@ -1,0 +1,68 @@
+--- previous/code.py
++++ 05_verify_budget/code.py
+@@ -1,6 +1,6 @@
+-"""MiniInfer stage 4: parallel_votes.
++"""MiniInfer stage 5: verify_budget.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/04_parallel_votes/code.py
++Run: python lessons/05_verify_budget/code.py
+ """
+ from __future__ import annotations
+ import json
+@@ -57,6 +57,34 @@
+     return 'prefill' if vote and actual else 'decode'
+ 
+ 
++"""Simplified MTP budget objective. Synthetic costs/rates, not DSpark or timing."""
++def choose(rates, curve, sampler_ms=0.0):
++    if not rates or not curve or sampler_ms < 0:
++        raise ValueError('nonempty requests/curve and nonnegative sampler cost required')
++    if any(not 0 <= p <= 1 for seq in rates for p in seq):
++        raise ValueError('confidence must be in [0,1]')
++    if any(ms <= 0 for _, ms in curve) or any(a[0] >= b[0] for a,b in zip(curve,curve[1:])):
++        raise ValueError('positive cost and increasing graph sizes required')
++    queue = sorted(((p, i) for i, seq in enumerate(rates) for p in seq), key=lambda x:(-x[0],x[1]))
++    expected = float(len(rates))
++    best = None
++    for extra in range(len(queue)+1):
++        total = len(rates)+extra
++        graph = next(((size,ms) for size,ms in curve if size >= total), None)
++        if graph is not None:
++            score = expected/(graph[1]+sampler_ms)
++            if best is None or score > best[0]:
++                best = score, extra, total, graph[0]
++        if extra < len(queue):
++            expected += queue[extra][0]
++    if best is None:
++        raise ValueError('no graph can hold golden tokens')
++    lengths = [1]*len(rates)
++    for _, i in queue[:best[1]]:
++        lengths[i] += 1
++    return {'query_lengths':lengths, 'total_q':best[2], 'graph_size':best[3], 'synthetic_score':round(best[0],4)}
++
++
+ @dataclass
+ class Request:
+     request_id: str
+@@ -79,6 +107,7 @@
+         self.waiting = list(requests)
+         self.running = []
+         self.pool = Blocks(10)  # 9 usable blocks, ID 0 reserved
++        self.verification_slots = 0
+ 
+     def emit(self, request, text):
+         request.output += text
+@@ -112,7 +141,12 @@
+     def decode(self):
+         active = list(self.running)
+         offsets = {r.request_id:len(r.output) for r in active}
+-        lengths = [1]*len(active)
++        if not active:
++            return
++        allocation = choose([[.9,.5] for _ in active], [(2,1.0),(4,1.3),(8,3.0)])
++        lengths = allocation['query_lengths']
++        self.verification_slots += sum(lengths)
++        self.trace.append(('verify-plan', lengths))
+         for request,count in zip(active,lengths):
+             start = offsets[request.request_id]
+             text = request.answer[start:start+count]  # fake oracle, NOT a model

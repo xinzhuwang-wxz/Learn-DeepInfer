@@ -1,0 +1,139 @@
+{
+  "title": "Learn-DeepInfer",
+  "tagline": "从一条请求，到可验证的推理系统",
+  "description": "中文优先 · 渐进式代码实践 · 源码证据 · Markdown 与网页",
+  "accent": "teal",
+  "repo": "https://github.com/deepseek-ai/DeepInfer",
+  "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+  "chapters": [
+    {
+      "file": "docs/00-start.md",
+      "slug": "00-start",
+      "title": "开始：一台小引擎",
+      "summary": "先固定学习边界和同一批请求",
+      "time": "15 分钟",
+      "number": "00"
+    },
+    {
+      "file": "docs/01-loop.md",
+      "slug": "01-loop",
+      "title": "请求的生命线",
+      "summary": "完成顺序与交付顺序分开",
+      "time": "25 分钟",
+      "lesson": "01_request_loop",
+      "number": "01"
+    },
+    {
+      "file": "docs/02-prefill.md",
+      "slug": "02-prefill",
+      "title": "给长请求一个预算",
+      "summary": "加入 waiting、chunk 与单调进度",
+      "time": "35 分钟",
+      "lesson": "02_chunk_budget",
+      "number": "02"
+    },
+    {
+      "file": "docs/03-memory.md",
+      "slug": "03-memory",
+      "title": "内存不是一个计数器",
+      "summary": "背压、引用计数与最后一次释放",
+      "time": "40 分钟",
+      "lesson": "03_block_lifecycle",
+      "number": "03"
+    },
+    {
+      "file": "docs/04-parallel.md",
+      "slug": "04-parallel",
+      "title": "选同一种下一步",
+      "summary": "ALL / ANY 与实际可执行投票",
+      "time": "45 分钟",
+      "lesson": "04_parallel_votes",
+      "number": "04"
+    },
+    {
+      "file": "docs/05-speculation.md",
+      "slug": "05-speculation",
+      "title": "验证更多，不一定更快",
+      "summary": "收益 / 代价与离散 graph 容量",
+      "time": "45 分钟",
+      "lesson": "05_verify_budget",
+      "number": "05"
+    },
+    {
+      "file": "docs/06-async.md",
+      "slug": "06-async",
+      "title": "别丢掉最后一批结果",
+      "summary": "在途状态、flush 和借用对象",
+      "time": "45 分钟",
+      "lesson": "06_async_lifetime",
+      "number": "06"
+    },
+    {
+      "file": "docs/07-replay.md",
+      "slug": "07-replay",
+      "title": "有界重放与可见域",
+      "summary": "先证明依赖，再删计算",
+      "time": "40 分钟",
+      "lesson": "07_bounded_replay",
+      "number": "07"
+    },
+    {
+      "file": "docs/08-grammar.md",
+      "slug": "08-grammar",
+      "title": "token 与语法一起回退",
+      "summary": "允许集合、恢复与确定性条件",
+      "time": "40 分钟",
+      "lesson": "08_grammar_rollback",
+      "number": "08"
+    },
+    {
+      "file": "docs/08-compute.md",
+      "slug": "08-compute",
+      "title": "计算路径的三张账本",
+      "summary": "attention 张量、缓存地址与专家路由",
+      "time": "50 分钟",
+      "number": "08+"
+    },
+    {
+      "file": "docs/09-evidence.md",
+      "slug": "09-evidence",
+      "title": "先数对，再说快",
+      "summary": "集成验收与真实运行取证台",
+      "time": "45 分钟",
+      "lesson": "09_metrics",
+      "number": "09"
+    },
+    {
+      "file": "docs/10-reproduce.md",
+      "slug": "10-reproduce",
+      "title": "走向真实验证",
+      "summary": "硬件、依赖、副作用与验证等级",
+      "time": "30 分钟",
+      "number": "10"
+    },
+    {
+      "file": "docs/11-method.md",
+      "slug": "11-method",
+      "title": "读懂一个状态迁移",
+      "summary": "从调用链、所有权到可反驳的结论",
+      "time": "25 分钟",
+      "number": "11"
+    },
+    {
+      "file": "docs/12-code.md",
+      "slug": "12-code",
+      "title": "完整代码册",
+      "summary": "九个独立快照与真实阶段差异",
+      "time": "随用随查",
+      "number": "12"
+    },
+    {
+      "file": "docs/13-sources.md",
+      "slug": "13-sources",
+      "title": "版本、许可与来源",
+      "summary": "逐项固定到文件和行号",
+      "time": "随用随查",
+      "number": "13"
+    }
+  ]
+}

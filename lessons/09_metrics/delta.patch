@@ -1,0 +1,19 @@
+--- previous/code.py
++++ 09_metrics/code.py
+@@ -1,6 +1,6 @@
+-"""MiniInfer stage 8: grammar_rollback.
++"""MiniInfer stage 9: metrics.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/08_grammar_rollback/code.py
++Run: python lessons/09_metrics/code.py
+ """
+ from __future__ import annotations
+ import json
+@@ -255,6 +255,7 @@
+ 
+     def report(self):
+         return {'outputs':[r.output for r in self.requests], 'logical_ticks':self.ticks,
++                'verification_slots':self.verification_slots,
+                 'committed_characters':sum(len(r.output) for r in self.requests),
+                 'measurement':'logical simulation only; no tokens/s or device timing'}
+ 

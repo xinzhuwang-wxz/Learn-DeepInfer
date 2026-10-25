@@ -1,0 +1,66 @@
+--- previous/code.py
++++ 08_grammar_rollback/code.py
+@@ -1,6 +1,6 @@
+-"""MiniInfer stage 7: bounded_replay.
++"""MiniInfer stage 8: grammar_rollback.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/07_bounded_replay/code.py
++Run: python lessons/08_grammar_rollback/code.py
+ """
+ from __future__ import annotations
+ import json
+@@ -102,6 +102,32 @@
+     return compact
+ 
+ 
++"""Tiny character grammar accepts exactly 'true' or 'false'. NOT xgrammar/JSON schema."""
++class Matcher:
++    words = ('true', 'false')
++    def __init__(self):
++        self.prefix = ''
++
++    def allowed(self):
++        result = {w[len(self.prefix)] for w in self.words if w.startswith(self.prefix) and len(w)>len(self.prefix)}
++        if self.prefix in self.words:
++            result.add('<eos>')
++        return result
++
++    def accept(self, token):
++        if token not in self.allowed():
++            return False
++        if token != '<eos>':
++            self.prefix += token
++        return True
++
++    def rollback(self, steps):
++        if not 0 <= steps <= len(self.prefix):
++            raise ValueError('rollback exceeds history')
++        if steps:
++            self.prefix = self.prefix[:-steps]
++
++
+ @dataclass
+ class Request:
+     request_id: str
+@@ -110,6 +136,7 @@
+     computed: int = 0
+     output: str = ''
+     blocks: list[int] = field(default_factory=list)
++    matcher: object = None
+ 
+ class Engine:
+     def __init__(self, requests):
+@@ -126,8 +153,13 @@
+         self.pool = Blocks(10)  # 9 usable blocks, ID 0 reserved
+         self.verification_slots = 0
+         self.pending = []
++        for request in requests:
++            request.matcher = Matcher()
+ 
+     def emit(self, request, text):
++        for token in text:
++            if not request.matcher.accept(token):
++                raise ValueError(f'grammar rejected {token!r} after {request.matcher.prefix!r}')
+         request.output += text
+         self.trace.append(('emit', request.request_id, text))
+         if len(request.output) == len(request.answer):

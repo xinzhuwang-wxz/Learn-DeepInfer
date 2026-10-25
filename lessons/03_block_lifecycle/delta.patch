@@ -1,0 +1,119 @@
+--- previous/code.py
++++ 03_block_lifecycle/code.py
+@@ -1,10 +1,46 @@
+-"""MiniInfer stage 2: chunk_budget.
++"""MiniInfer stage 3: block_lifecycle.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/02_chunk_budget/code.py
++Run: python lessons/03_block_lifecycle/code.py
+ """
+ from __future__ import annotations
+ import json
+ from dataclasses import dataclass, field
++
++"""Reference-counted block teaching model. Zero is reserved; no KV tensor allocation."""
++class Blocks:
++    def __init__(self, total):
++        if total < 2:
++            raise ValueError('need sentinel plus at least one usable block')
++        self.refs = [0] * total
++
++    def status(self, count):
++        if count < 0:
++            raise ValueError('negative allocation')
++        if count >= len(self.refs):
++            return 'NEVER'
++        free = sum(n == 0 for n in self.refs[1:])
++        return 'OK' if free >= count else 'LATER'
++
++    def allocate(self, count):
++        if self.status(count) != 'OK':
++            raise ValueError(self.status(count))
++        ids = [i for i in range(1, len(self.refs)) if self.refs[i] == 0][:count]
++        for i in ids:
++            self.refs[i] = 1
++        return ids
++
++    def pin(self, i):
++        self._live(i)
++        self.refs[i] += 1
++
++    def free(self, i):
++        self._live(i)
++        self.refs[i] -= 1
++
++    def _live(self, i):
++        if not 0 < i < len(self.refs) or self.refs[i] <= 0:
++            raise ValueError('not a live block')
++
+ 
+ @dataclass
+ class Request:
+@@ -13,6 +49,7 @@
+     answer: str
+     computed: int = 0
+     output: str = ''
++    blocks: list[int] = field(default_factory=list)
+ 
+ class Engine:
+     def __init__(self, requests):
+@@ -26,6 +63,7 @@
+         self.finished = set()
+         self.waiting = list(requests)
+         self.running = []
++        self.pool = Blocks(10)  # 9 usable blocks, ID 0 reserved
+ 
+     def emit(self, request, text):
+         request.output += text
+@@ -33,11 +71,22 @@
+         if len(request.output) == len(request.answer):
+             self.finished.add(request.request_id)
+             self.running = [r for r in self.running if r is not request]
++            for block in request.blocks:
++                self.pool.free(block)
++            request.blocks.clear()
+ 
+     def prefill(self):
+         budget = 4
+         while self.waiting and budget:
+             request = self.waiting[0]
++            if not request.blocks:
++                count = (request.prompt_length + len(request.answer) + 3)//4
++                status = self.pool.status(count)
++                if status == 'NEVER':
++                    raise ValueError('request exceeds toy block capacity')
++                if status == 'LATER':
++                    break
++                request.blocks = self.pool.allocate(count)
+             take = min(request.prompt_length-request.computed, budget)
+             request.computed += take
+             budget -= take
+@@ -55,12 +104,28 @@
+             self.emit(request,text)
+ 
+     def run(self):
++        try:
++            return self._run()
++        except Exception:
++            # Teaching policy: fail this whole batch, then release every live owner.
++            for request in self.requests:
++                for block in request.blocks:
++                    self.pool.free(block)
++                request.blocks.clear()
++            self.waiting.clear()
++            self.running.clear()
++            raise
++
++    def _run(self):
+         while len(self.finished) < len(self.requests):
+             self.ticks += 1
+             if self.ticks > 1000:
+                 raise RuntimeError('teaching liveness guard: inspect trace')
+             if self.waiting:
++                before = len(self.trace)
+                 self.prefill()
++                if len(self.trace) == before:
++                    self.decode()  # capacity wait must not freeze running requests
+             else:
+                 self.decode()
+         return [r.output for r in self.requests]

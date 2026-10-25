@@ -1,0 +1,372 @@
+{
+  "model_flow": {
+    "label": "decoder 层的 norm / attention / MoE 编排",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/models/decoder_layer.py",
+    "start_line": 112,
+    "end_line": 182,
+    "sha256": "2189fa14c0665a3a211b47c5440748273fd92b39a68268a0080530d3c95b7297",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/models/decoder_layer.py#L112-L182"
+  },
+  "attn_container": {
+    "label": "低秩 query、压缩 KV 与精度容器",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/models/v4_modules/mla_attn.py",
+    "start_line": 26,
+    "end_line": 229,
+    "sha256": "7cf38a5bfa3800577c177a83e4cfecc1d0cf2b48b5bbadcfa1039b71ae882789",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/models/v4_modules/mla_attn.py#L26-L229"
+  },
+  "attn_runtime": {
+    "label": "prefill / decode attention 与缓存数据流",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/models/v4_modules/attn.py",
+    "start_line": 589,
+    "end_line": 880,
+    "sha256": "cb228c8fd4c76200e2ec266c51872107cfe7b384fdc88458b3d1c0ff101f3116",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/models/v4_modules/attn.py#L589-L880"
+  },
+  "cache_layout": {
+    "label": "KVCache 与 StateBlock 物理布局",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/worker/cache_engine.py",
+    "start_line": 206,
+    "end_line": 242,
+    "sha256": "ca3d80120fe6bc50971b180278dd575d585e1a6c7a3c2174a8a6fd6213454161",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/worker/cache_engine.py#L206-L242"
+  },
+  "cache_format": {
+    "label": "FP8 / FP4 data 与 scale 字节格式",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/layers/tilelang_ops/cache_common.py",
+    "start_line": 24,
+    "end_line": 162,
+    "sha256": "95835810dc6676704c7902ca6e9778d38b6f8137fb37320a245826992aed55d1",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/layers/tilelang_ops/cache_common.py#L24-L162"
+  },
+  "moe_container": {
+    "label": "logical / physical expert 与门控参数",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/models/v4_modules/moe.py",
+    "start_line": 1,
+    "end_line": 112,
+    "sha256": "4e154e1536e5926bf4e4b7b58d5ccc71a692b46c8d26d7edcc56827bfe540de3",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/models/v4_modules/moe.py#L1-L112"
+  },
+  "moe_runtime": {
+    "label": "精度选择、gate、dispatch、grouped GEMM、combine",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/models/v4_modules/mlp.py",
+    "start_line": 149,
+    "end_line": 616,
+    "sha256": "2541bcc83b178a9e2f18b387b301d60111d6d603e18e2d31df38196b03d290dd",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/models/v4_modules/mlp.py#L149-L616"
+  },
+  "linear_quant": {
+    "label": "FP8 cast、scale layout 与输出 stride",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/layers/linear.py",
+    "start_line": 10,
+    "end_line": 174,
+    "sha256": "a8ca60074a1c868e87662240073c6c3648d66ceae953befa3b08772da2225967",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/layers/linear.py#L10-L174"
+  },
+  "scope": {
+    "label": "发布范围、硬件与复现入口",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "README.md",
+    "start_line": 1,
+    "end_line": 96,
+    "sha256": "b55624158ada4dc21b882d24ded06bf82f65350b44d170877b68395712cd670d",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/README.md#L1-L96"
+  },
+  "entry": {
+    "label": "LLM.generate → _run_engine",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/entrypoints/llm.py",
+    "start_line": 93,
+    "end_line": 198,
+    "sha256": "069a5333d9f47047ccc87584792627dfa6eee9cf93bdc046107cbd0218a6bada",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/entrypoints/llm.py#L93-L198"
+  },
+  "launch": {
+    "label": "模型解析、环境设置与启动边界",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "examples/_config.py",
+    "start_line": 33,
+    "end_line": 125,
+    "sha256": "a671d83fa5becac257722e67facec2f33743a1263e0b2e6355dcdb00984f4f42",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/examples/_config.py#L33-L125"
+  },
+  "engine": {
+    "label": "LLMEngine.step / flush / post_process",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/engine/llm_engine.py",
+    "start_line": 860,
+    "end_line": 1029,
+    "sha256": "a636d60ca5711f6b7c21e68370c3bd9c2de6fc3f4439a7429ca4f572f0edeebe",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/engine/llm_engine.py#L860-L1029"
+  },
+  "hooks": {
+    "label": "PD 与外部缓存扩展钩子",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/engine/llm_engine.py",
+    "start_line": 800,
+    "end_line": 829,
+    "sha256": "a636d60ca5711f6b7c21e68370c3bd9c2de6fc3f4439a7429ca4f572f0edeebe",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/engine/llm_engine.py#L800-L829"
+  },
+  "votes": {
+    "label": "NORMAL 引擎的两轮投票",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/scheduler.hpp",
+    "start_line": 275,
+    "end_line": 346,
+    "sha256": "c14de4d5341170227b82ddf2d146d9c6a337937885a6886237aab5a7238da5db",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/scheduler.hpp#L275-L346"
+  },
+  "prefill": {
+    "label": "_schedule_prefill",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/scheduler.hpp",
+    "start_line": 351,
+    "end_line": 554,
+    "sha256": "c14de4d5341170227b82ddf2d146d9c6a337937885a6886237aab5a7238da5db",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/scheduler.hpp#L351-L554"
+  },
+  "decode": {
+    "label": "_schedule_decode / schedule",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/scheduler.hpp",
+    "start_line": 556,
+    "end_line": 735,
+    "sha256": "c14de4d5341170227b82ddf2d146d9c6a337937885a6886237aab5a7238da5db",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/scheduler.hpp#L556-L735"
+  },
+  "blocks": {
+    "label": "Blocks / BlockManager 引用计数",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/block_manager.hpp",
+    "start_line": 1,
+    "end_line": 178,
+    "sha256": "83eabc936b4316b70254f8772041669de3e6a8878b4f12859e3a7ddd17c395d0",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/block_manager.hpp#L1-L178"
+  },
+  "worker": {
+    "label": "Forward → Post-process → Sample",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/worker/worker.py",
+    "start_line": 89,
+    "end_line": 189,
+    "sha256": "ad32e595d9ab289dff1a7709136431ac60dae709e9e5123ae42eb0ebf7c30cbb",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/worker/worker.py#L89-L189"
+  },
+  "zos": {
+    "label": "prepare_zos_inputs 请求重映射",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/zos.cpp",
+    "start_line": 142,
+    "end_line": 187,
+    "sha256": "1cb70e0b4ed7181b95e19ef2cc3cc640d1cd8f24e874ce4bc34fe51d6f031b46",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/zos.cpp#L142-L187"
+  },
+  "mtp": {
+    "label": "MTPVarlen 的预算目标与置信度时序",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/mtp_varlen.hpp",
+    "start_line": 135,
+    "end_line": 275,
+    "sha256": "164f45db4cccd6d6909dd2846e7dfffb57754b108af679443bf4bd71ec33785a",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/mtp_varlen.hpp#L135-L275"
+  },
+  "eplb": {
+    "label": "副本分配与逐步峰值贪心布局",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/eplb/policy.py",
+    "start_line": 1,
+    "end_line": 140,
+    "sha256": "52241603827a1a1d19a395d48f5d618a7336fd1ceee631127e6782c644f736dc",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/eplb/policy.py#L1-L140"
+  },
+  "yoco": {
+    "label": "SWA 可见域与 keep_tokens 约束",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/input_metadata/prepare_tensor_input_v4.cpp",
+    "start_line": 129,
+    "end_line": 359,
+    "sha256": "93a6b1dd533db116d2f7540c78d6bb5419bdb8c1d2063b031ab8b1a8cc138fe2",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/input_metadata/prepare_tensor_input_v4.cpp#L129-L359"
+  },
+  "yoco_view": {
+    "label": "mask / compact metadata 视图",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/input_metadata/yoco.py",
+    "start_line": 68,
+    "end_line": 182,
+    "sha256": "882a33de3da0fba81644adde9e9e1a90ec3d3ff34a8f3ad4dda18faafebd6460",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/input_metadata/yoco.py#L68-L182"
+  },
+  "yoco_test": {
+    "label": "L1 metadata / L2 数值等价验证",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "examples/yoco/README.md",
+    "start_line": 1,
+    "end_line": 41,
+    "sha256": "ac84c1fdf99a75ef04db3184b8c81d0774f377152abf9ce32a40145e2f4c8d79",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/examples/yoco/README.md#L1-L41"
+  },
+  "grammar": {
+    "label": "mask、accept_token、rollback",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/structure_output/matcher.py",
+    "start_line": 118,
+    "end_line": 245,
+    "sha256": "83b69010567a4306d6d435c88d019a302e7ee2d89af01eb037a59e40c0e67ce1",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/structure_output/matcher.py#L118-L245"
+  },
+  "builder": {
+    "label": "异步语法编译、入队与重放",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/structure_output/so_matcher_builder.py",
+    "start_line": 58,
+    "end_line": 129,
+    "sha256": "1f26aea5205c2f6953ba7ca21079c84b888115ed44c158a120536a17517f1ee0",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/structure_output/so_matcher_builder.py#L58-L129"
+  },
+  "sampling": {
+    "label": "SamplingParams 与 seq_seed",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/sampling_params.py",
+    "start_line": 13,
+    "end_line": 119,
+    "sha256": "f800034efdebe1b21620660a51fa9122d3d7f138d8e60cd738f33d643c3116f8",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/sampling_params.py#L13-L119"
+  },
+  "invariant": {
+    "label": "单条与批量输出逐项比较",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "tests/models/test_batch_invariant.py",
+    "start_line": 1,
+    "end_line": 116,
+    "sha256": "10ceb7fec656188623de450fab4dfffed98bc2ffe9510f8f545dff6f0b5dd887",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/tests/models/test_batch_invariant.py#L1-L116"
+  },
+  "benchmark": {
+    "label": "稳态指标与满接受率口径",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "examples/benchmark.py",
+    "start_line": 380,
+    "end_line": 412,
+    "sha256": "a4e0b114b4173b9d2124cdabfedc54d3dd5cd81d269d7054c48f9bac780eb9f2",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/examples/benchmark.py#L380-L412"
+  },
+  "pareto": {
+    "label": "配置一致性与 VARLEN 重标定限制",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "examples/sweep/plot_pareto.py",
+    "start_line": 22,
+    "end_line": 78,
+    "sha256": "13249bd8fd328ea6d59436e8a54360f53fbfcee6ec60a32f2ffb64e881ff6c56",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/examples/sweep/plot_pareto.py#L22-L78"
+  },
+  "qa": {
+    "label": "生产系统背景，不等于发布内容",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "doc/inference_deployment_qa.md",
+    "start_line": 1,
+    "end_line": 130,
+    "sha256": "55d428d9958aa35ac863d7f5a2eb21528e683226784b1ac334e8068e21f2326f",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/doc/inference_deployment_qa.md#L1-L130"
+  },
+  "model": {
+    "label": "V4 层编排与自定义 kernel 依赖",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/model_executor/models/decoder_layer.py",
+    "start_line": 1,
+    "end_line": 160,
+    "sha256": "2189fa14c0665a3a211b47c5440748273fd92b39a68268a0080530d3c95b7297",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/model_executor/models/decoder_layer.py#L1-L160"
+  },
+  "async_launch": {
+    "label": "模型与采样的发起边界",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/worker/model_runner.py",
+    "start_line": 308,
+    "end_line": 367,
+    "sha256": "9e2e18d136c9e0c9f23905ff994e9d23afaa94aa7a133d425e7fc1fc069033ef",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/worker/model_runner.py#L308-L367"
+  },
+  "async_post_flush": {
+    "label": "event门控的后处理与尾部排空",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/worker/worker.py",
+    "start_line": 248,
+    "end_line": 283,
+    "sha256": "ad32e595d9ab289dff1a7709136431ac60dae709e9e5123ae42eb0ebf7c30cbb",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/worker/worker.py#L248-L283"
+  },
+  "output_clone": {
+    "label": "RequestOutput.clone 复制记录",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/pybind_output.cpp",
+    "start_line": 16,
+    "end_line": 18,
+    "sha256": "be4123bbf5e05d0e717e3f58816bc7d8726b55f3b02dde5b1854ef6ee1e9a056",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/pybind_output.cpp#L16-L18"
+  },
+  "output_pool": {
+    "label": "输出池记录的分配与释放",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "csrc/engine/outputs.hpp",
+    "start_line": 45,
+    "end_line": 80,
+    "sha256": "9ef2f5a37dd07b03fe7fac7f92cbbf1dfc056ff4a0c0fbb9b7a384149f71bf6f",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/csrc/engine/outputs.hpp#L45-L80"
+  },
+  "deferred_release": {
+    "label": "分资源的延迟释放与clone unpin",
+    "repository": "deepseek-ai/DeepInfer",
+    "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+    "path": "deepinfer/engine/llm_engine.py",
+    "start_line": 92,
+    "end_line": 116,
+    "sha256": "a636d60ca5711f6b7c21e68370c3bd9c2de6fc3f4439a7429ca4f572f0edeebe",
+    "url": "https://github.com/deepseek-ai/DeepInfer/blob/9bd9cf243fc53ef9afbf8f04d391d989117d6ab9/deepinfer/engine/llm_engine.py#L92-L116"
+  }
+}

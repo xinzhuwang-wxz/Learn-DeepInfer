@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/deepseek-ai/DeepInfer",
+  "commit": "9bd9cf243fc53ef9afbf8f04d391d989117d6ab9",
+  "observed_utc": "2026-10-25",
+  "license": "Apache-2.0",
+  "source_files": 32,
+  "submodules_initialized": false,
+  "upstream_code_executed": false
+}

@@ -1,0 +1,53 @@
+--- previous/code.py
++++ 04_parallel_votes/code.py
+@@ -1,6 +1,6 @@
+-"""MiniInfer stage 3: block_lifecycle.
++"""MiniInfer stage 4: parallel_votes.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/03_block_lifecycle/code.py
++Run: python lessons/04_parallel_votes/code.py
+ """
+ from __future__ import annotations
+ import json
+@@ -40,6 +40,21 @@
+     def _live(self, i):
+         if not 0 < i < len(self.refs) or self.refs[i] <= 0:
+             raise ValueError('not a live block')
++
++
++"""NORMAL-engine two-vote conceptual model. No collective or hardware is executed."""
++def stage(wants, allocates, decode_step, all_interval=2, any_interval=6):
++    if not wants or len(wants) != len(allocates):
++        raise ValueError('rank vectors must be nonempty and aligned')
++    if min(all_interval, any_interval) < 1 or decode_step < 0:
++        raise ValueError('invalid interval/step')
++    any_point = decode_step != 0 and decode_step % any_interval == 0
++    all_point = decode_step % all_interval == 0
++    if not (any_point or all_point):
++        return 'decode'
++    vote = any(wants) if any_point else all(wants)
++    actual = any(want and can for want, can in zip(wants, allocates))
++    return 'prefill' if vote and actual else 'decode'
+ 
+ 
+ @dataclass
+@@ -121,11 +136,15 @@
+             self.ticks += 1
+             if self.ticks > 1000:
+                 raise RuntimeError('teaching liveness guard: inspect trace')
+-            if self.waiting:
+-                before = len(self.trace)
++            # A simulated peer is idle. This is a vote model, not distributed execution.
++            want = bool(self.waiting)
++            can = want and (bool(self.waiting[0].blocks) or self.pool.status((self.waiting[0].prompt_length+len(self.waiting[0].answer)+3)//4)=='OK')
++            if want and self.pool.status((self.waiting[0].prompt_length+len(self.waiting[0].answer)+3)//4)=='NEVER':
++                raise ValueError('request exceeds toy block capacity')
++            chosen = stage([want,False],[can,False],self.ticks,2,3)
++            self.trace.append(('phase',chosen))
++            if chosen == 'prefill':
+                 self.prefill()
+-                if len(self.trace) == before:
+-                    self.decode()  # capacity wait must not freeze running requests
+             else:
+                 self.decode()
+         return [r.output for r in self.requests]

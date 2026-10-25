@@ -1,0 +1,67 @@
+--- previous/code.py
++++ 06_async_lifetime/code.py
+@@ -1,6 +1,6 @@
+-"""MiniInfer stage 5: verify_budget.
++"""MiniInfer stage 6: async_lifetime.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/05_verify_budget/code.py
++Run: python lessons/06_async_lifetime/code.py
+ """
+ from __future__ import annotations
+ import json
+@@ -108,6 +108,7 @@
+         self.running = []
+         self.pool = Blocks(10)  # 9 usable blocks, ID 0 reserved
+         self.verification_slots = 0
++        self.pending = []
+ 
+     def emit(self, request, text):
+         request.output += text
+@@ -140,7 +141,13 @@
+ 
+     def decode(self):
+         active = list(self.running)
+-        offsets = {r.request_id:len(r.output) for r in active}
++        # Snapshot positions include one in-flight batch; never resubmit its tokens.
++        offsets = {r.request_id:len(r.output)+sum(len(t) for q,t in self.pending if q is r) for r in active}
++        active = [r for r in active if offsets[r.request_id] < len(r.answer)]
++        self.trace.append(('forward', [r.request_id for r in active]))
++        previous, self.pending = self.pending, []
++        for request,text in previous:
++            self.emit(request,text)
+         if not active:
+             return
+         allocation = choose([[.9,.5] for _ in active], [(2,1.0),(4,1.3),(8,3.0)])
+@@ -150,6 +157,14 @@
+         for request,count in zip(active,lengths):
+             start = offsets[request.request_id]
+             text = request.answer[start:start+count]  # fake oracle, NOT a model
++            if text:
++                self.pending.append((request,text))
++                self.trace.append(('sample-pending',request.request_id,text))
++
++    def flush(self):
++        previous, self.pending = self.pending, []
++        self.trace.append(('flush',len(previous)))
++        for request,text in previous:
+             self.emit(request,text)
+ 
+     def run(self):
+@@ -163,6 +178,7 @@
+                 request.blocks.clear()
+             self.waiting.clear()
+             self.running.clear()
++            self.pending.clear()
+             raise
+ 
+     def _run(self):
+@@ -170,6 +186,9 @@
+             self.ticks += 1
+             if self.ticks > 1000:
+                 raise RuntimeError('teaching liveness guard: inspect trace')
++            if not self.waiting and all(len(r.output)+sum(len(t) for q,t in self.pending if q is r)>=len(r.answer) for r in self.running):
++                self.flush()
++                continue
+             # A simulated peer is idle. This is a vote model, not distributed execution.
+             want = bool(self.waiting)
+             can = want and (bool(self.waiting[0].blocks) or self.pool.status((self.waiting[0].prompt_length+len(self.waiting[0].answer)+3)//4)=='OK')

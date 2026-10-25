@@ -1,0 +1,61 @@
+--- previous/code.py
++++ 02_chunk_budget/code.py
+@@ -1,6 +1,6 @@
+-"""MiniInfer stage 1: request_loop.
++"""MiniInfer stage 2: chunk_budget.
+ Standalone standard-library teaching simulation. No model, tensor, network or device execution.
+-Run: python lessons/01_request_loop/code.py
++Run: python lessons/02_chunk_budget/code.py
+ """
+ from __future__ import annotations
+ import json
+@@ -11,6 +11,7 @@
+     request_id: str
+     prompt_length: int
+     answer: str
++    computed: int = 0
+     output: str = ''
+ 
+ class Engine:
+@@ -23,8 +24,8 @@
+         self.trace = []
+         self.ticks = 0
+         self.finished = set()
+-        self.waiting = []
+-        self.running = list(requests)
++        self.waiting = list(requests)
++        self.running = []
+ 
+     def emit(self, request, text):
+         request.output += text
+@@ -32,6 +33,18 @@
+         if len(request.output) == len(request.answer):
+             self.finished.add(request.request_id)
+             self.running = [r for r in self.running if r is not request]
++
++    def prefill(self):
++        budget = 4
++        while self.waiting and budget:
++            request = self.waiting[0]
++            take = min(request.prompt_length-request.computed, budget)
++            request.computed += take
++            budget -= take
++            self.trace.append(('prefill', request.request_id, take))
++            if request.computed == request.prompt_length:
++                self.running.append(self.waiting.pop(0))
++
+     def decode(self):
+         active = list(self.running)
+         offsets = {r.request_id:len(r.output) for r in active}
+@@ -46,7 +59,10 @@
+             self.ticks += 1
+             if self.ticks > 1000:
+                 raise RuntimeError('teaching liveness guard: inspect trace')
+-            self.decode()
++            if self.waiting:
++                self.prefill()
++            else:
++                self.decode()
+         return [r.output for r in self.requests]
+ 
+     def report(self):
